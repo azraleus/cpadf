@@ -17,7 +17,7 @@ copy_adf () {
   then
     mkdir -p /tmp/adf
   fi
-  sudo cp $HOME/scripts/blank.adf /tmp/adf/blank$2.adf
+  sudo cp $script_dir/blank.adf /tmp/adf/blank$2.adf
   sudo mount -t affs /tmp/adf/blank$2.adf /mnt/amiga$2 -o loop
   echo "Copying file to ADF.."
   sudo cp $1 /mnt/amiga$2
@@ -54,7 +54,7 @@ main () {
   sudo umount /media/$USER/$share_id/
 }
 
-
+script_dir=$(dirname "$0")
 if [ $# -ne 1 ]
   then
     echo "No or too many arguments.."
@@ -68,7 +68,7 @@ else
     read -r -p "Is it your USB drive [Y/n]? "$share" : " input
     case $input in
           [yY][eE][sS]|[yY])
-                main $1 $share_id
+                main $1 $share_id $script_dir
                 ;;
           [nN][oO]|[nN])
                 echo "Exiting.."
