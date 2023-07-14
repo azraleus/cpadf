@@ -23,15 +23,15 @@ copy_adf () {
   sudo cp $1 /mnt/amiga$2
   sudo umount /mnt/amiga$2
   echo "Syncing ADF to pendrive"
-  cp /tmp/adf/blank$2.adf /media/$USER/$share_id/
+  cp /tmp/adf/blank$2.adf $share/
   sudo rm /tmp/adf/blank$2.adf
 }
 
 main () {
   echo "Cleaning pendrive..."
-  if [[ -f /media/$USER/$share_id/blank* ]]
+  if [[ -f $share/blank* ]]
   then
-    sudo rm /media/$USER/$share_id/blank*
+    sudo rm $share/blank*
   fi
   sudo mkdir -p /tmp/split
   umount_all_adfs
@@ -51,7 +51,7 @@ main () {
     done
     sudo rm /tmp/split/*
   fi
-  sudo umount /media/$USER/$share_id/
+  sudo umount $share
 }
 
 script_dir=$(dirname "$0")
@@ -60,11 +60,12 @@ if [ $# -ne 1 ]
     echo "No or too many arguments.."
 else
   share=$(mount | grep vfat | grep -v efi | awk {'print $3'})
+  echo "Pendrive mountpoint: "$share
   if [ -z "$share" ]; 
   then 
     echo "Can't detect vfat FS. Exiting.."; 
   else 
-    share_id=$(echo $share | awk -F"/" '{print $4}')
+    share_id=$(echo $share | awk -F"/" '{print $NF}')
     read -r -p "Is it your USB drive [Y/n]? "$share" : " input
     case $input in
           [yY][eE][sS]|[yY])
